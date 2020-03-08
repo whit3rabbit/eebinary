@@ -1,0 +1,6 @@
+github.com/akamensky/argparse v1.2.1 h1:YMYF1VMku+dnz7TVTJpYhsCXHSYCVMAIcKaBbjwbvZo=
+github.com/akamensky/argparse v1.2.1/go.mod h1:S5kwC7IuDcEr5VeXtGPRVZ5o/FdhcMlQz4IZQuw64xA=
+github.com/amenzhinsky/go-memexec v0.3.0 h1:66SstZAjTPSTGmdB9KZkX9HYT4pQje2BFwDcNwSeFAs=
+github.com/amenzhinsky/go-memexec v0.3.0/go.mod h1:4fa9webmrOoDnA/LEpiC4lB6gz8JaZyCTp/y8QTCcDg=
+github.com/jteeuwen/go-bindata v3.0.7+incompatible h1:91Uy4d9SYVr1kyTJ15wJsog+esAZZl7JmEfTkwmhJts=
+github.com/jteeuwen/go-bindata v3.0.7+incompatible/go.mod h1:JVvhzYOiGBnFSYRyV00iY8q7/0PThjIYav1p9h5dmKs=
