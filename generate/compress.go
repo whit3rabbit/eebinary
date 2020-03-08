@@ -3,10 +3,9 @@ package generate
 import (
 	"bytes"
 	"compress/zlib"
-	"encoding/base64"
 )
 
-func Compress(byteSlice []byte) string {
+func Compress(byteSlice []byte) []byte {
 
 	// Compress byte array to zlib
 	var b bytes.Buffer
@@ -21,8 +20,8 @@ func Compress(byteSlice []byte) string {
 		panic(err)
 	}
 
-	compressedString := base64.StdEncoding.EncodeToString(b.Bytes())
+	//compressedString := base64.StdEncoding.EncodeToString(b.Bytes())
 
-	return compressedString
+	return b.Bytes()
 
 }

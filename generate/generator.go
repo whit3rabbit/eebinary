@@ -10,8 +10,8 @@ import (
 )
 
 type Output struct {
-	EncryptedString string
-	Key             string
+	DataString string
+	Key string
 }
 
 func byteToString(by []byte) string {
@@ -29,10 +29,8 @@ func byteToString(by []byte) string {
 
 }
 
-func Generate(input, output *string) {
 
-	// Empty string slice to place the byte literals in
-	var dataSlice []string
+func Generate(input, output *string) {
 
 	// Create filename.go which will contain binary
 	outputFileName := *output + ".go"
@@ -48,28 +46,18 @@ func Generate(input, output *string) {
 		panic(err.Error())
 	}
 
-	// Loop over each byte from input executable
-	// Create []string dataslice
-	for _, b := range infile {
-		bString := fmt.Sprintf("%v", b)
-		dataSlice = append(dataSlice, bString)
-	}
-
-	// Create string with separator ","
-	dataString := strings.Join(dataSlice, ", ")
-
-	// Convert string to []byte, then compress
-	compressedString := Compress([]byte(dataString))
+	// Compress bytes
+	compressedString := Compress(infile)
 
 	// Encrypt byte
 	encryptedBytes, keyBytes := Encrypt(compressedString)
 
-	// Convert bytes to string for input into template
-	encryptedString := byteToString(encryptedBytes)
+	// Convert bytes to string for template
+	dataString := byteToString(encryptedBytes)
 	keyString := byteToString(keyBytes)
 
 	// Create a structure for template processing
-	outStruct := Output{EncryptedString: encryptedString, Key: keyString}
+	outStruct := Output{DataString: dataString, Key: keyString }
 
 	// Open output.tmpl
 	t, err := template.ParseFiles("output.tmpl")
@@ -84,5 +72,6 @@ func Generate(input, output *string) {
 		return
 	}
 	outfile.Close()
+
 
 }

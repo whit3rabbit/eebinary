@@ -8,7 +8,7 @@ import (
 	"io"
 )
 
-func Encrypt(compressedString string) ([]byte, []byte) {
+func Encrypt(compressedString []byte) ([]byte, []byte) {
 
 	// Create random default encryption key
 	key := make([]byte, 32)
@@ -37,7 +37,7 @@ func Encrypt(compressedString string) ([]byte, []byte) {
 		fmt.Println(err)
 	}
 
-	encryptedString := gcm.Seal(nonce, nonce, []byte(compressedString), nil)
+	encryptedString := gcm.Seal(nonce, nonce, compressedString, nil)
 
 	return encryptedString, key
 }

