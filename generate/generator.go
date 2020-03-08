@@ -29,11 +29,35 @@ func byteToString(by []byte) string {
 
 }
 
+func writeToTemplate(templatename string, outfile *os.File, outStruct *Output) {
 
-func Generate(input, output *string) {
+	// Open output-[linux,windows].tmpl
+	t, err := template.ParseFiles(templatename)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	err = t.Execute(outfile, outStruct)
+	if err != nil {
+		log.Print("execute: ", err)
+		return
+	}
+	outfile.Close()
+
+}
+
+
+func Generate(input, output *string, win *bool) {
+
+	opersys := "linux"
+
+	// Logic to determine if building for Windows or Linux
+	if *win {	opersys = "windows"	}
 
 	// Create filename.go which will contain binary
 	outputFileName := *output + ".go"
+
 	outfile, err := os.Create(outputFileName)
 	if err != nil {
 		panic(err.Error())
@@ -59,19 +83,14 @@ func Generate(input, output *string) {
 	// Create a structure for template processing
 	outStruct := Output{DataString: dataString, Key: keyString }
 
-	// Open output.tmpl
-	t, err := template.ParseFiles("output.tmpl")
-	if err != nil {
-		log.Print(err)
-		return
-	}
 
-	err = t.Execute(outfile, outStruct)
-	if err != nil {
-		log.Print("execute: ", err)
-		return
+	// Write to file
+	if opersys == "windows" {
+		templatename := "output-windows.tmpl"
+		writeToTemplate(templatename, outfile, &outStruct)
+	} else {
+		templatename := "output-linux.tmpl"
+		writeToTemplate(templatename, outfile, &outStruct)
 	}
-	outfile.Close()
-
 
 }

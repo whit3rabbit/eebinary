@@ -21,8 +21,10 @@ go build
 cd ..
 go build
 eebinary -i sample/sample.exe -o test.go
+eebinary -i sample/sample.exe -o test.go -w # For Windows binary
 
 # Build new encrypted executable
+set GOARCH=386 # For Windows binary
 go build test.go
 ./test
 ```
